@@ -10,25 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Build Docker image
-      run: docker build -t cicd-node-app .
+      - name: Build Docker image
+        run: docker build -t cicd-node-app .
 
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ubuntu
-        key: ${{ secrets.EC2_KEY }}
-        script: |
-  rm -rf cicd-node-app || true
-  git clone https://github.com/rahmatkhan1/ci-cd-pipeline.git cicd-node-app
-  cd cicd-node-app
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            rm -rf cicd-node-app || true
+            git clone https://github.com/rahmatkhan1/ci-cd-pipeline.git cicd-node-app
+            cd cicd-node-app
 
-  docker stop cicd || true
-  docker rm cicd || true
+            docker stop cicd || true
+            docker rm cicd || true
 
-  docker build -t cicd-node-app .
-  docker run -d -p 80:3000 --name cicd cicd-node-app
+            docker build -t cicd-node-app .
+            docker run -d -p 80:3000 --name cicd cicd-node-app
