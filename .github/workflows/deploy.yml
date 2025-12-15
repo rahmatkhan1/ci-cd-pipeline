@@ -23,6 +23,12 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_KEY }}
         script: |
-          docker stop cicd || true
-          docker rm cicd || true
-          docker run -d -p 80:3000 --name cicd cicd-node-app
+  rm -rf cicd-node-app || true
+  git clone https://github.com/rahmatkhan1/ci-cd-pipeline.git cicd-node-app
+  cd cicd-node-app
+
+  docker stop cicd || true
+  docker rm cicd || true
+
+  docker build -t cicd-node-app .
+  docker run -d -p 80:3000 --name cicd cicd-node-app
